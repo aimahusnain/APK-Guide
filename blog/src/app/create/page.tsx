@@ -2,13 +2,7 @@
 
 import Button from "@/components/button";
 import { GlobalContext } from "@/context";
-import {
-  Gamescategories,
-  categories,
-  firebaseConfig,
-  formControls,
-  initialBlogFormData,
-} from "@/utils";
+import { firebaseConfig, formControls, initialBlogFormData } from "@/utils";
 import { BlogFormData } from "@/utils/types";
 import { initializeApp } from "firebase/app";
 import {
@@ -198,67 +192,51 @@ export default function Create() {
                             rows={6}
                             className="w-full resize-none rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                           />
-                        ) : (
-                          control.component === "select" && (
-                            <>
-                              {selectedSection === "blog" ? (
-                                <select
-                                  onChange={(
-                                    event: React.ChangeEvent<HTMLSelectElement>
-                                  ) => {
-                                    setFormData({
-                                      ...formData,
-                                      category: event.target.value,
-                                    });
-                                  }}
-                                  value={formData.category}
-                                  name="category"
-                                  placeholder="Choose Blog Category"
-                                  className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                                >
-                                  <option value="">Select</option>
-                                  {categories.map((optionItem) => (
-                                    <option
-                                      key={optionItem.value}
-                                      value={optionItem.value}
-                                    >
-                                      {optionItem.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              ) : (
-                                selectedSection === "game" && (
-                                  <select
-                                    onChange={(
-                                      event: React.ChangeEvent<HTMLSelectElement>
-                                    ) => {
-                                      setFormData({
-                                        ...formData,
-                                        category: event.target.value,
-                                      });
-                                    }}
-                                    value={formData.category}
-                                    name="category"
-                                    placeholder="Choose Game Category"
-                                    className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                                  >
-                                    <option value="">Select</option>
-                                    {Gamescategories.map((optionItem) => (
-                                      <option
-                                        key={optionItem.value}
-                                        value={optionItem.value}
-                                      >
-                                        {optionItem.label}
-                                      </option>
-                                    ))}
-                                  </select>
-                                )
-                              )}
-                            </>
-                          )
-                        )}
+                        ) : control.component === "select" ? (
+                          <select
+                            onChange={(
+                              event: React.ChangeEvent<HTMLSelectElement>
+                            ) => {
+                              setFormData({
+                                ...formData,
+                                [control.id]: event.target.value,
+                              });
+                            }}
+                            value={formData[control.id as keyof BlogFormData]}
+                            name={control.id}
+                            placeholder={control.placeholder}
+                            className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                          >
+                            <option value={""} id="">
+                              Select
+                            </option>
+                            {control.options.map((optionItem) => (
+                              <option
+                                id={optionItem.value}
+                                value={optionItem.value}
+                              >
+                                {optionItem.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : null}
                       </div>
                     ))}
+
+                    {/* Select Option */}
+
+                    <label className="mb-3 block text-sm font-medium text-dark dark:text-white">
+                      Select Section
+                    </label>
+                    <select
+                      onChange={handleSectionChange}
+                      value={selectedSection}
+                      className="w-full mb-8 rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                    >
+                      <option value="blog">Blog</option>
+                      <option value="game">Game</option>
+                    </select>
+                    {/* Select Option */}
 
                     <div className="w-full px-4">
                       <Button
